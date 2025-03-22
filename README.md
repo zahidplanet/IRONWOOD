@@ -12,6 +12,35 @@ IRONWOOD is a comprehensive digital platform serving as the central interface fo
 - **Physician Dashboard**: Presents individualized metrics (revenue, conversion rates, patient feedback, procedure data)
 - **Patient Portal** (Test Mode): Placeholder for future patient health data portal
 
+## Getting Started
+
+### Web Application
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+```
+
+### Desktop Application
+
+The IRONWOOD dashboard can also be run as a desktop application using Electron.
+
+```bash
+# Install dependencies
+npm install
+
+# Run in development mode
+npm run electron:dev
+
+# Build desktop app
+npm run electron:build
+```
+
+After building, you can find the installer in the `dist` directory.
+
 ## Development Instructions
 
 ### 1. Project Architecture & Role-Based Views
@@ -73,6 +102,20 @@ IRONWOOD is a comprehensive digital platform serving as the central interface fo
 - Inline comments and README updates
 - Documentation of design decisions
 
+## Data Storage
+
+The application currently uses browser localStorage for data persistence in the prototype phase. In the future, this will be replaced with a cloud-based solution.
+
+### Current Implementation
+- Local data persistence using browser localStorage
+- Mock data pre-populated for demonstration
+- Data remains persistent between sessions
+
+### Future Plans
+- Replace localStorage with cloud database
+- Implement authentication and authorization
+- Add real-time data synchronization
+
 ## IoT Infrastructure Integration
 
 ### 1. Positioning Within IoT Ecosystem
@@ -98,16 +141,6 @@ IRONWOOD is a comprehensive digital platform serving as the central interface fo
 3. Ensure all tasks and checks pass before requesting review
 4. Keep code and design clear and focused
 5. Maintain project context and roadmap in documentation
-
-## Getting Started
-
-```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
-```
 
 ## License
 

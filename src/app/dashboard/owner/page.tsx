@@ -1,13 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import KPICard from '@/components/common/KPICard'
 import LineChartComponent from '@/components/common/LineChartComponent'
+import { useLocalStorage } from '@/lib/useLocalStorage'
+import { STORAGE_KEYS } from '@/lib/localStorage'
 
-// Mock data - replace with API calls in production
-const kpiData = [
+// Default mock data
+const defaultKpiData = [
   {
     title: 'Total Revenue',
     value: '$984,254',
@@ -30,7 +32,7 @@ const kpiData = [
   }
 ]
 
-const revenueData = [
+const defaultRevenueData = [
   { name: 'Jan', revenue: 65000, expenses: 42000, profit: 23000 },
   { name: 'Feb', revenue: 59000, expenses: 39000, profit: 20000 },
   { name: 'Mar', revenue: 80000, expenses: 48000, profit: 32000 },
@@ -40,13 +42,45 @@ const revenueData = [
   { name: 'Jul', revenue: 92000, expenses: 51000, profit: 41000 }
 ]
 
+const defaultProjects = [
+  { name: 'New Wing Construction', status: 'In Progress' },
+  { name: 'EHR System Upgrade', status: 'In Progress' },
+  { name: 'Staff Training Program', status: 'In Progress' }
+]
+
+const defaultPhysicians = [
+  { name: 'Dr. Smith', patients: 242, revenue: 142500, satisfaction: 4.8, status: 'Active' },
+  { name: 'Dr. Johnson', patients: 187, revenue: 124800, satisfaction: 4.5, status: 'Active' },
+  { name: 'Dr. Williams', patients: 203, revenue: 138900, satisfaction: 4.3, status: 'Active' },
+  { name: 'Dr. Brown', patients: 165, revenue: 112000, satisfaction: 4.7, status: 'Active' }
+]
+
 const revenueChartKeys = [
   { key: 'revenue', color: '#0a84ff', name: 'Revenue' },
   { key: 'expenses', color: '#ff375f', name: 'Expenses' },
   { key: 'profit', color: '#30d158', name: 'Profit' }
 ]
 
+// Type definition for our dashboard data
+type OwnerDashboardData = {
+  kpiData: typeof defaultKpiData;
+  revenueData: typeof defaultRevenueData;
+  projects: typeof defaultProjects;
+  physicians: typeof defaultPhysicians;
+}
+
 export default function OwnerDashboard() {
+  // Use the localStorage hook with our default data
+  const [dashboardData, setDashboardData] = useLocalStorage<OwnerDashboardData>(
+    STORAGE_KEYS.OWNER_DASHBOARD_DATA,
+    {
+      kpiData: defaultKpiData,
+      revenueData: defaultRevenueData,
+      projects: defaultProjects,
+      physicians: defaultPhysicians
+    }
+  );
+
   return (
     <main className="min-h-screen bg-background p-8">
       <div className="max-w-7xl mx-auto">
@@ -62,7 +96,7 @@ export default function OwnerDashboard() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {kpiData.map((kpi, index) => (
+          {dashboardData.kpiData.map((kpi, index) => (
             <KPICard 
               key={index}
               title={kpi.title}
@@ -75,7 +109,7 @@ export default function OwnerDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <LineChartComponent 
             title="Revenue Overview"
-            data={revenueData}
+            data={dashboardData.revenueData}
             dataKeys={revenueChartKeys}
           />
           
@@ -85,11 +119,11 @@ export default function OwnerDashboard() {
             </div>
             
             <div className="space-y-4">
-              {['New Wing Construction', 'EHR System Upgrade', 'Staff Training Program'].map((project, index) => (
+              {dashboardData.projects.map((project, index) => (
                 <div key={index} className="flex items-center">
                   <div className="h-2 w-2 rounded-full bg-primary mr-3"></div>
-                  <span>{project}</span>
-                  <div className="ml-auto text-sm text-gray-400">In Progress</div>
+                  <span>{project.name}</span>
+                  <div className="ml-auto text-sm text-gray-400">{project.status}</div>
                 </div>
               ))}
             </div>
@@ -113,14 +147,14 @@ export default function OwnerDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {['Dr. Smith', 'Dr. Johnson', 'Dr. Williams', 'Dr. Brown'].map((name, index) => (
+                {dashboardData.physicians.map((physician, index) => (
                   <tr key={index} className="border-b border-white/5 hover:bg-white/5">
-                    <td className="p-3">{name}</td>
-                    <td className="p-3">{Math.floor(Math.random() * 100 + 150)}</td>
-                    <td className="p-3">${Math.floor(Math.random() * 50000 + 100000)}</td>
-                    <td className="p-3">{(Math.random() * 2 + 3).toFixed(1)}/5</td>
+                    <td className="p-3">{physician.name}</td>
+                    <td className="p-3">{physician.patients}</td>
+                    <td className="p-3">${physician.revenue.toLocaleString()}</td>
+                    <td className="p-3">{physician.satisfaction}/5</td>
                     <td className="p-3">
-                      <span className="px-2 py-1 rounded-full text-xs bg-accent-green/20 text-accent-green">Active</span>
+                      <span className="px-2 py-1 rounded-full text-xs bg-accent-green/20 text-accent-green">{physician.status}</span>
                     </td>
                   </tr>
                 ))}

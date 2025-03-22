@@ -1,0 +1,32 @@
+appId: com.ironwood.dashboard
+productName: IRONWOOD Dashboard
+copyright: Copyright © 2023 IRONWOOD
+
+directories:
+  output: dist
+  buildResources: resources
+
+files:
+  - from: .
+    filter:
+      - package.json
+      - electron
+  - from: out
+    to: .
+
+mac:
+  category: public.app-category.medical
+  target: dmg
+  icon: resources/icon.icns
+
+win:
+  target: nsis
+  icon: resources/icon.ico
+
+linux:
+  target:
+    - AppImage
+    - deb
+  category: Medical
+
+publish: null 
