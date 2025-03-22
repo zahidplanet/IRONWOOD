@@ -63,9 +63,11 @@ export function clearStorage(): void {
   }
 }
 
-// Storage keys
+// Storage keys used throughout the application
 export const STORAGE_KEYS = {
-  OWNER_DASHBOARD_DATA: 'ironwood_owner_dashboard',
-  PHYSICIAN_DASHBOARD_DATA: 'ironwood_physician_dashboard',
-  USER_PREFERENCES: 'ironwood_user_preferences',
+  USER_PREFERENCES: 'ironwood:user-preferences',
+  AUTH_TOKEN: 'ironwood:auth-token',
+  PATIENT_DATA: 'ironwood:patient-data',
+  RECENT_SEARCHES: 'ironwood:recent-searches',
+  DASHBOARD_LAYOUT: 'ironwood:dashboard-layout'
 }; 

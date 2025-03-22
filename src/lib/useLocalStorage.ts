@@ -9,7 +9,20 @@ import { getFromStorage, saveToStorage } from './localStorage';
 export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
   // State to store our value
   const [storedValue, setStoredValue] = useState<T>(() => {
-    return getFromStorage<T>(key, initialValue);
+    if (typeof window === 'undefined') {
+      return initialValue;
+    }
+    
+    try {
+      // Get from local storage by key
+      const item = window.localStorage.getItem(key);
+      // Parse stored json or if none return initialValue
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      // If error also return initialValue
+      console.error('Error parsing storage:', error);
+      return initialValue;
+    }
   });
 
   // Return a wrapped version of useState's setter function that
