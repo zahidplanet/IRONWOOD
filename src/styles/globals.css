@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 18, 18, 18;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      rgb(var(--background-start-rgb)),
+      rgb(var(--background-end-rgb))
+    )
+    fixed;
+}
+
+@layer utilities {
+  .glassmorphism {
+    @apply bg-background-glass backdrop-blur-lg border border-white/10 shadow-xl;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent-purple;
+  }
+}
+
+@layer components {
+  .dashboard-card {
+    @apply glassmorphism rounded-xl p-4 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20;
+  }
+  
+  .card-header {
+    @apply text-lg font-medium mb-3 flex items-center justify-between;
+  }
+} 
