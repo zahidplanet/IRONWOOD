@@ -8,9 +8,15 @@
     "setup": "node auto-start.js",
     "clean": "rm -rf ironwood-app/node_modules && rm -rf ironwood-app/package-lock.json",
     "setup-ai": "node setup-ai-integration.js",
-    "start-integrated": "node start-integrated.js"
+    "start-integrated": "node start-integrated.js",
+    "setup-git-hooks": "node scripts/setup-git-hooks.js",
+    "postinstall": "npm run setup-git-hooks"
   },
   "author": "",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
 }
