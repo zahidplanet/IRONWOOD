@@ -9,27 +9,27 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Simulated AI models and data
-investment_styles = {
-    "warren_buffett": {
-        "name": "Warren Buffett",
-        "style": "Value Investing",
-        "metrics": ["P/E Ratio", "Debt-to-Equity", "Return on Equity", "Competitive Advantage"]
+property_analysis_models = {
+    "value_based": {
+        "name": "Value Analysis",
+        "focus": "Long-term Value",
+        "metrics": ["ROI", "Cash Flow", "Market Growth", "Risk Assessment"]
     },
-    "cathie_wood": {
-        "name": "Cathie Wood",
-        "style": "Disruptive Innovation",
-        "metrics": ["Market Potential", "Innovation Rate", "Growth Rate", "Industry Disruption"]
+    "development": {
+        "name": "Development Focus",
+        "focus": "Development Potential",
+        "metrics": ["Construction Cost", "Permit Timeline", "Local Regulations", "Market Demand"]
     },
-    "charlie_munger": {
-        "name": "Charlie Munger",
-        "style": "Mental Models & Value",
-        "metrics": ["Long-term Outlook", "Management Quality", "Business Model", "Competitive Moat"]
+    "income": {
+        "name": "Income Property",
+        "focus": "Rental Income",
+        "metrics": ["Cap Rate", "Net Operating Income", "Occupancy Rate", "Property Management"]
     }
 }
 
 @app.route('/')
 def index():
-    return jsonify({"status": "AI Hedge Fund API is running"})
+    return jsonify({"status": "IRONWOOD Real Estate API is running"})
 
 @app.route('/api/health')
 def health_check():
@@ -42,27 +42,27 @@ def health_check():
         }
     })
 
-@app.route('/api/portfolio/analysis', methods=['POST'])
-def portfolio_analysis():
+@app.route('/api/property/analysis', methods=['POST'])
+def property_analysis():
     data = request.json
-    portfolio = data.get('portfolio', [])
+    properties = data.get('properties', [])
     
     # Simulate analysis (in real app would use actual AI models)
     time.sleep(1)  # Simulate processing time
     
     analysis_results = []
-    for stock in portfolio:
+    for prop in properties:
         analysis_results.append({
-            "symbol": stock['symbol'],
+            "address": prop['address'],
             "analysis": {
-                "sentiment": random.uniform(0, 1),
-                "fundamentals": random.uniform(0, 1),
-                "technicals": random.uniform(0, 1),
+                "location_score": random.uniform(0, 1),
+                "value_potential": random.uniform(0, 1),
+                "development_cost": random.uniform(0, 1),
                 "risk": random.uniform(0, 1)
             },
-            "recommendation": random.choice(["BUY", "HOLD", "SELL"]),
+            "recommendation": random.choice(["BUY", "HOLD", "PASS"]),
             "confidence": random.uniform(0.5, 0.95),
-            "reasoning": f"Analysis based on current market conditions and {stock['symbol']}'s performance metrics."
+            "reasoning": f"Analysis based on current market conditions and property details for {prop['address']}."
         })
     
     return jsonify({
@@ -70,31 +70,31 @@ def portfolio_analysis():
         "timestamp": time.time()
     })
 
-@app.route('/api/investor/analysis', methods=['POST'])
-def investor_analysis():
+@app.route('/api/model/analysis', methods=['POST'])
+def model_analysis():
     data = request.json
-    symbol = data.get('symbol')
-    investor = data.get('investor', 'warren_buffett')
+    address = data.get('address')
+    model = data.get('model', 'value_based')
     
-    # Get the investor style
-    style = investment_styles.get(investor, investment_styles['warren_buffett'])
+    # Get the model type
+    analysis_model = property_analysis_models.get(model, property_analysis_models['value_based'])
     
-    # Simulate investor-specific analysis
+    # Simulate model-specific analysis
     time.sleep(0.5)  # Simulate processing time
     
     return jsonify({
-        "symbol": symbol,
-        "investor": style["name"],
-        "style": style["style"],
+        "address": address,
+        "model": analysis_model["name"],
+        "focus": analysis_model["focus"],
         "analysis": {
-            metric: random.uniform(0, 1) for metric in style["metrics"]
+            metric: random.uniform(0, 1) for metric in analysis_model["metrics"]
         },
-        "recommendation": random.choice(["BUY", "HOLD", "SELL"]),
+        "recommendation": random.choice(["BUY", "HOLD", "PASS"]),
         "confidence": random.uniform(0.6, 0.9),
-        "reasoning": f"{style['name']} would evaluate {symbol} primarily on {', '.join(style['metrics'])}."
+        "reasoning": f"{analysis_model['name']} evaluates properties primarily on {', '.join(analysis_model['metrics'])}."
     })
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    print(f"Starting AI Hedge Fund API server on port {port}")
+    port = int(os.environ.get('PORT', 5001))
+    print(f"Starting IRONWOOD Real Estate API server on port {port}")
     app.run(host='0.0.0.0', port=port, debug=True) 

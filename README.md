@@ -138,3 +138,12 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Next.js team for the amazing framework
 - Electron for enabling desktop applications with web technologies
 - [AI Hedge Fund](https://github.com/virattt/ai-hedge-fund) for the sophisticated AI investment agent system
+
+## Documentation
+
+Complete project documentation for the IRONWOOD Mixed-Use Healthcare Development project is available in the [docs](./docs) directory, including:
+
+- [App Overview](./docs/01-App-Overview.md)
+- [App Flow](./docs/02-App-Flow.md)
+- [Tech Stack](./docs/03-Tech-Stack.md)
+- [Frontend Guidelines](./docs/04-Frontend-Guidelines.md)
