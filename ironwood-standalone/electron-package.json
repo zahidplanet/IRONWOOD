@@ -1,0 +1,12 @@
+{
+  "name": "ironwood-electron",
+  "version": "1.0.0",
+  "private": true,
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^22.0.0"
+  }
+}

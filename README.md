@@ -1,147 +1,140 @@
 # IRONWOOD
 
-A futuristic dashboard for IoT-enabled medical facility management, featuring role-based views, real-time data visualization, and a glassmorphic UI.
+IRONWOOD is a modern desktop application built with Next.js and Electron, designed to provide an integrated platform for AI-powered real estate development and property management.
 
-## Project Overview
+## Features
 
-IRONWOOD is a comprehensive digital platform serving as the central interface for monitoring and managing a medical facility's physical infrastructure. The dashboard integrates data from multiple IoT endpoints including medical equipment, building management systems, and security devices.
-
-### Key Components
-
-- **Owner Dashboard**: Displays aggregated, real-time data across the entire facility (financials, HR, projects, sales)
-- **Physician Dashboard**: Presents individualized metrics (revenue, conversion rates, patient feedback, procedure data)
-- **Patient Portal** (Test Mode): Placeholder for future patient health data portal
+- **Next.js + Electron Integration**: Modern web technologies in a desktop application
+- **AI Property Analysis**: Advanced property valuation and market analysis with AI-powered insights
+- **Development Dashboard**: Comprehensive project tracking and monitoring
+- **Property Portfolio Management**: Track and manage multiple development projects
+- **Design Review Tools**: Visualize and approve architectural designs
 
 ## Getting Started
 
-### Web Application
+### Prerequisites
 
+- Node.js (v14 or higher)
+- npm (v6 or higher)
+- Python (v3.6 or higher) - Required only for advanced AI analytics
+
+### Installation
+
+1. Clone the repository:
 ```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
+git clone https://github.com/zahidpasha/IRONWOOD.git
+cd IRONWOOD
 ```
 
-### Desktop Application
-
-The IRONWOOD dashboard can also be run as a desktop application using Electron.
-
+2. Run the all-in-one launcher script:
 ```bash
-# Install dependencies
-npm install
-
-# Run in development mode
-npm run electron:dev
-
-# Build desktop app
-npm run electron:build
+node auto-start.js
 ```
 
-After building, you can find the installer in the `dist` directory.
+This script will:
+- Set up the project structure
+- Install dependencies
+- Start the Next.js server and Electron app together
 
-## Development Instructions
+### AI Analytics Integration
 
-### 1. Project Architecture & Role-Based Views
+To set up the AI analytics integration:
 
-#### Primary Views
-- **Owner Dashboard**: Holistic view of the entire facility
-- **Physician Dashboard**: Personalized and secure view for individual doctors
-- **Patient Portal**: Currently in test mode with "Coming Soon" placeholders
+1. Install the AI components:
+```bash
+npm run setup-ai
+```
 
-#### Navigation & Routing
-- Persistent sidebar/header for switching between views
-- Role-based routing/conditional rendering for access control
+This will:
+- Set up the Python API bridge to connect Next.js with the Python backend
+- Configure the necessary endpoints
 
-### 2. Design & User Experience
+2. Install Python dependencies:
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r python-api/requirements.txt
+```
 
-#### Futuristic, Glassmorphic UI
-- Glass-like appearance for cards, modals, and panels
-- Dark, high-contrast theme with neon/vibrant accent colors
-- Clean, minimalistic layout with ample negative space
+3. Run the integrated application:
+```bash
+npm run start-integrated
+```
 
-#### Smooth Animations
-- Framer Motion for transitions and animations
-- Subtle motion effects for updated metrics
-- Crisp, rapid animations for an energetic feel
+This will start both:
+- The Python Flask API server for AI processing
+- The Next.js + Electron application
 
-#### Responsive Layout
-- Modular grid layout for adaptive display
-- Component-based sections for reusability
+## Development
 
-### 3. Component Structure & Data Integration
+### Project Structure
 
-#### Extend Existing Components
-- KPICard: Enhanced with physician-specific metrics
-- Chart Components: Line and bar charts with filtering options
-- Tables: Detailed rows for comprehensive data display
+```
+ironwood-app/            # Main application
+├── components/          # React components
+├── electron/            # Electron configuration
+├── pages/               # Next.js pages
+│   └── api/             # API routes
+└── styles/              # CSS styles
 
-#### Dynamic Data Handling
-- React hooks for data loading
-- Clear error and loading states
-- Structure for future API integration
+python-api/              # Python API bridge
+├── server.py            # Flask API server
+└── requirements.txt     # Python dependencies
+```
 
-#### Patient Portal Toggle
-- Navigation toggle for Patient Portal view
-- Placeholder content with "Coming Soon" message
-- Distinct separation from other dashboards
+### Development Workflow
 
-### 4. Code Refactoring & Future Proofing
+1. Make changes to the Next.js application in the `pages/` directory
+2. The development server will automatically reload
+3. The Electron app will display the changes from the Next.js server
 
-#### Modularize Code
-- Refactor into smaller, maintainable subcomponents
-- Separate components for different dashboards
-- Reusable UI elements
+### Creating New Features
 
-#### Theming & Styling
-- Global theme for consistency
-- Encapsulated, reusable styling
+Create new features/fix issues in dedicated branches:
 
-#### Documentation & Comments
-- Inline comments and README updates
-- Documentation of design decisions
+```bash
+git checkout -b feature/your-feature-name
+# Make your changes
+git add .
+git commit -m "Description of changes"
+git push origin feature/your-feature-name
+# Create a PR when ready for review
+```
 
-## Data Storage
+## AI Architecture
 
-The application currently uses browser localStorage for data persistence in the prototype phase. In the future, this will be replaced with a cloud-based solution.
+The AI Analytics integration provides advanced insights for real estate development:
 
-### Current Implementation
-- Local data persistence using browser localStorage
-- Mock data pre-populated for demonstration
-- Data remains persistent between sessions
+- **Market Analysis**: Property values, trends, and growth potential
+- **Development Optimization**: Cost analysis, return on investment projections
+- **Risk Assessment**: Market volatility and development risk analysis
+- **Design Evaluation**: Architectural efficiency and marketability scoring
 
-### Future Plans
-- Replace localStorage with cloud database
-- Implement authentication and authorization
-- Add real-time data synchronization
+These AI components collaborate to provide comprehensive property development insights with reasoning and confidence levels.
 
-## IoT Infrastructure Integration
+## Roadmap
 
-### 1. Positioning Within IoT Ecosystem
+- [ ] Enhanced property visualization tools
+- [ ] Real-time data integration with market APIs
+- [ ] User authentication and team collaboration
+- [ ] Notification system for project milestones
+- [ ] Advanced data visualization tools
+- [ ] Mobile companion app for on-site updates
 
-- **Centralized Data Aggregation**: Aggregates data from multiple IoT endpoints
-- **Data Ingestion**: Middleware for real-time data collection
-- **Data Fusion**: Unified view of disparate data sources
-- **Real-Time Facility Management**: Live monitoring and alerting
-- **Enhanced Healthcare Delivery**: Integration with clinical devices
-- **Future-Ready Architecture**: Modular and extensible design
+## Contributing
 
-### 2. Future IoT Components Integration
-
-- **Building Management Systems**: HVAC, lighting, security
-- **Medical Devices & Wearables**: Diagnostic tools, patient monitoring
-- **Robotics & Automation**: Medication dispensing, patient transport
-- **Data Analytics & AI**: Predictive maintenance, outcome forecasting
-
-## Development Workflow
-
-1. Work on issues in separate branches
-2. Commit frequently to avoid bottlenecking
-3. Ensure all tasks and checks pass before requesting review
-4. Keep code and design clear and focused
-5. Maintain project context and roadmap in documentation
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-[MIT](LICENSE) 
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Next.js team for the amazing framework
+- Electron for enabling desktop applications with web technologies
+- [AI Hedge Fund](https://github.com/virattt/ai-hedge-fund) for the sophisticated AI investment agent system

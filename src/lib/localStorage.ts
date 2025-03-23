@@ -69,5 +69,7 @@ export const STORAGE_KEYS = {
   AUTH_TOKEN: 'ironwood:auth-token',
   PATIENT_DATA: 'ironwood:patient-data',
   RECENT_SEARCHES: 'ironwood:recent-searches',
-  DASHBOARD_LAYOUT: 'ironwood:dashboard-layout'
+  DASHBOARD_LAYOUT: 'ironwood:dashboard-layout',
+  OWNER_DASHBOARD_DATA: 'ironwood:owner-dashboard-data',
+  PHYSICIAN_DASHBOARD_DATA: 'ironwood:physician-dashboard-data'
 }; 

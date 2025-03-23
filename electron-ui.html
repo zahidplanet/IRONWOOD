@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>IRONWOOD Healthcare Dashboard</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f7f7f7;
+      color: #333;
+      overflow: hidden;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 600px;
+    }
+    .title {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #1a365d 0%, #2a4365 50%, #2c5282 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 2s infinite alternate;
+    }
+    .subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      color: #666;
+    }
+    .loader {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 2s linear infinite;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      padding: 12px 24px;
+      background: linear-gradient(90deg, #1a365d 0%, #2a4365 50%, #2c5282 100%);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    }
+    .btn:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    .status {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .hidden {
+      display: none;
+    }
+    .instructions {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #f0f7ff;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes shine {
+      from {
+        background-position: 0%;
+      }
+      to {
+        background-position: 200%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">IRONWOOD</h1>
+    <p class="subtitle">Healthcare Dashboard System</p>
+    
+    <div id="not-started">
+      <p>The Next.js server is not running yet.</p>
+      <button id="start-btn" class="btn">Start Next.js Server</button>
+    </div>
+    
+    <div id="starting" class="hidden">
+      <div class="loader"></div>
+      <p>Starting Next.js server...</p>
+      <p class="status" id="status-message">Initializing...</p>
+    </div>
+    
+    <div id="running" class="hidden">
+      <p>Server is running! 🎉</p>
+      <button id="open-btn" class="btn">Open Dashboard in Browser</button>
+      <button id="reload-btn" class="btn" style="background: #4CAF50; margin-top: 0.5rem;">Reload Electron App</button>
+    </div>
+    
+    <div class="instructions">
+      <p><strong>Instructions:</strong></p>
+      <ol>
+        <li>Click "Start Next.js Server" to initialize the server</li>
+        <li>Wait for the server to start (this may take a minute)</li>
+        <li>Once ready, click "Open Dashboard in Browser" to view your app</li>
+      </ol>
+      <p><strong>Note:</strong> The Next.js server will continue running in the background even if you close this window.</p>
+    </div>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+    
+    // Elements
+    const notStartedEl = document.getElementById('not-started');
+    const startingEl = document.getElementById('starting');
+    const runningEl = document.getElementById('running');
+    const startBtn = document.getElementById('start-btn');
+    const openBtn = document.getElementById('open-btn');
+    const reloadBtn = document.getElementById('reload-btn');
+    const statusMessage = document.getElementById('status-message');
+    
+    // Event listeners
+    startBtn.addEventListener('click', () => {
+      notStartedEl.classList.add('hidden');
+      startingEl.classList.remove('hidden');
+      
+      // Tell main process to start Next.js
+      ipcRenderer.send('start-next-server');
+    });
+    
+    openBtn.addEventListener('click', () => {
+      ipcRenderer.send('open-in-browser');
+    });
+    
+    reloadBtn.addEventListener('click', () => {
+      ipcRenderer.send('reload-app');
+    });
+    
+    // Listen for server status updates
+    ipcRenderer.on('server-status', (event, message) => {
+      statusMessage.textContent = message;
+    });
+    
+    // Listen for server ready event
+    ipcRenderer.on('server-ready', () => {
+      startingEl.classList.add('hidden');
+      runningEl.classList.remove('hidden');
+    });
+    
+    // Check if server is already running
+    ipcRenderer.send('check-server-status');
+    ipcRenderer.on('server-already-running', () => {
+      notStartedEl.classList.add('hidden');
+      runningEl.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

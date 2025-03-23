@@ -1,76 +1,16 @@
 {
-  "name": "ironwood",
-  "version": "0.1.0",
-  "private": true,
-  "main": "electron/main.js",
+  "name": "ironwood-root",
+  "version": "1.0.0",
+  "description": "IRONWOOD - AI-powered healthcare and portfolio management platform",
+  "main": "auto-start.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "electron:dev": "concurrently \"cross-env BROWSER=none npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron:dev:quick": "node electron-dev.js",
-    "electron:build": "node build.js",
-    "electron:start": "electron .",
-    "desktop": "cross-env BROWSER=none npm run electron:dev:quick",
-    "desktop:build": "npm run electron:build",
-    "clean": "rimraf .next out dist",
-    "rebuild": "npm run clean && npm run desktop:build"
+    "start": "node auto-start.js",
+    "setup": "node auto-start.js",
+    "clean": "rm -rf ironwood-app/node_modules && rm -rf ironwood-app/package-lock.json",
+    "setup-ai": "node setup-ai-integration.js",
+    "start-integrated": "node start-integrated.js"
   },
-  "dependencies": {
-    "next": "14.1.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "framer-motion": "^10.18.0",
-    "recharts": "^2.10.3",
-    "date-fns": "^3.0.0",
-    "axios": "^1.6.2",
-    "clsx": "^2.0.0",
-    "tailwindcss": "^3.4.0",
-    "postcss": "^8.4.32",
-    "autoprefixer": "^10.4.16",
-    "electron-is-dev": "^2.0.0",
-    "electron-serve": "^1.1.0",
-    "electron-store": "^8.1.0"
-  },
-  "devDependencies": {
-    "typescript": "^5.3.3",
-    "@types/react": "^18.2.45",
-    "@types/react-dom": "^18.2.18",
-    "@types/node": "^20.10.5",
-    "eslint": "^8.56.0",
-    "eslint-config-next": "14.1.0",
-    "electron": "^30.0.0",
-    "electron-builder": "^24.9.1",
-    "concurrently": "^8.2.2",
-    "wait-on": "^7.2.0",
-    "cross-env": "^7.0.3",
-    "rimraf": "^5.0.5"
-  },
-  "build": {
-    "appId": "com.ironwood.dashboard",
-    "productName": "IRONWOOD Dashboard",
-    "files": [
-      "electron/**/*",
-      "out/**/*",
-      "package.json"
-    ],
-    "directories": {
-      "output": "dist",
-      "buildResources": "resources"
-    },
-    "mac": {
-      "category": "public.app-category.medical",
-      "target": "dmg",
-      "icon": "resources/icon.icns"
-    },
-    "win": {
-      "target": "nsis",
-      "icon": "resources/icon.ico"
-    },
-    "linux": {
-      "target": ["AppImage", "deb"],
-      "category": "Medical"
-    }
-  }
+  "author": "",
+  "license": "MIT",
+  "private": true
 }

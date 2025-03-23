@@ -691,13 +691,16 @@ export function simulateRealtimeData(callback: (data: any) => void, interval = 2
       // Keep only last 24 readings
       const updatedReadings = [...device.readings.slice(1), newReading];
       
-      // Random chance of status change - using type assertion for the status
-      let updatedStatus = device.status;
+      // Random chance of status change
+      let updatedStatus: 'online' | 'maintenance' = device.status as 'online' | 'maintenance';
       if (Math.random() < 0.01) {
-        updatedStatus = Math.random() < 0.5 ? 'maintenance' : 'offline';
+        // Since we're in a block where device.status can only be 'online' | 'maintenance'
+        // (because offline devices are filtered out above)
+        updatedStatus = Math.random() < 0.5 ? 'maintenance' : 'online';
         
-        // Add an alert for the device going offline
-        if (updatedStatus === 'offline') {
+        // We need to handle the case separately for creating alerts
+        const deviceGoingOffline = Math.random() < 0.5 && updatedStatus === 'online';
+        if (deviceGoingOffline) {
           alerts = [...alerts, {
             id: `AL-${Date.now()}`,
             type: 'critical',
@@ -707,6 +710,9 @@ export function simulateRealtimeData(callback: (data: any) => void, interval = 2
             acknowledged: false,
             details: `Device in ${device.location} lost connection. Requires attention.`
           }];
+          
+          // Now we can safely set the status to offline
+          return { ...device, readings: updatedReadings, status: 'offline' };
         }
       }
       

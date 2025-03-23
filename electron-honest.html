@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IRONWOOD</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #121212;
+      color: white;
+    }
+    .container {
+      text-align: center;
+      padding: 2rem;
+      width: 100%;
+      max-width: 650px;
+    }
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, #0070f3, #9333ea);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradient 3s ease infinite;
+      background-size: 200% 200%;
+    }
+    @keyframes gradient {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    .loader {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #0070f3;
+      animation: spin 1s ease-in-out infinite;
+      margin: 10px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .status-container {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #1e1e1e;
+      border-radius: 4px;
+      text-align: left;
+      min-height: 60px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .status-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #0070f3;
+    }
+    .status-msg {
+      margin: 4px 0;
+      font-size: 0.9rem;
+    }
+    .status-error {
+      color: #ff4d4f;
+    }
+    .status-success {
+      color: #52c41a;
+    }
+    .status-waiting {
+      color: #faad14;
+    }
+    .button {
+      background: linear-gradient(to right, #0070f3, #6c5ce7);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 5px;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: all 0.2s ease;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+    .button.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .button.active:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 112, 243, 0.5);
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .info-panel {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+    .info-panel h3 {
+      margin-top: 0;
+      color: #0070f3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>IRONWOOD</h1>
+    <p>Healthcare Dashboard System</p>
+    
+    <div class="status-container">
+      <div class="status-title">Next.js Server Status:</div>
+      <div id="nextjs-status" class="status-msg status-waiting">
+        Checking server status...
+      </div>
+      <div id="nextjs-loader" class="loader" style="display: inline-block;"></div>
+    </div>
+    
+    <div class="button-container">
+      <button id="startButton" class="button">Start Next.js Server</button>
+      <button id="openButton" class="button">Open in Browser</button>
+      <button id="checkButton" class="button active">Check Status</button>
+    </div>
+    
+    <div class="info-panel">
+      <h3>Honest Status Information</h3>
+      <p>This launcher transparently shows the real status of your application:</p>
+      <ul>
+        <li>No fake progress bars - only real status updates</li>
+        <li>Server availability is actively checked</li>
+        <li>Clear error messages when something goes wrong</li>
+        <li>You control when to start services</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+    
+    // DOM elements
+    const nextJsStatus = document.getElementById('nextjs-status');
+    const nextJsLoader = document.getElementById('nextjs-loader');
+    const startButton = document.getElementById('startButton');
+    const openButton = document.getElementById('openButton');
+    const checkButton = document.getElementById('checkButton');
+    
+    // State
+    let isServerRunning = false;
+    let isCheckingServer = false;
+    
+    // Update status display
+    function updateStatus(message, type = 'normal') {
+      nextJsStatus.textContent = message;
+      nextJsStatus.className = 'status-msg';
+      
+      if (type === 'error') {
+        nextJsStatus.classList.add('status-error');
+      } else if (type === 'success') {
+        nextJsStatus.classList.add('status-success');
+      } else if (type === 'waiting') {
+        nextJsStatus.classList.add('status-waiting');
+      }
+    }
+    
+    // Show/hide loader
+    function setLoading(isLoading) {
+      nextJsLoader.style.display = isLoading ? 'inline-block' : 'none';
+      isCheckingServer = isLoading;
+    }
+    
+    // Update button states
+    function updateButtons() {
+      startButton.className = isServerRunning ? 'button' : 'button active';
+      openButton.className = isServerRunning ? 'button active' : 'button';
+      checkButton.className = isCheckingServer ? 'button' : 'button active';
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      checkServerStatus();
+    });
+    
+    // Check server status
+    function checkServerStatus() {
+      if (isCheckingServer) return;
+      
+      setLoading(true);
+      updateStatus('Checking Next.js server status...', 'waiting');
+      updateButtons();
+      
+      ipcRenderer.send('check-server');
+    }
+    
+    // Start Next.js server
+    function startNextJsServer() {
+      if (isServerRunning || isCheckingServer) return;
+      
+      setLoading(true);
+      updateStatus('Starting Next.js server...', 'waiting');
+      updateButtons();
+      
+      ipcRenderer.send('start-server');
+    }
+    
+    // Open in browser
+    function openInBrowser() {
+      if (!isServerRunning) return;
+      
+      updateStatus('Opening application in browser...', 'waiting');
+      ipcRenderer.send('open-browser');
+    }
+    
+    // Button event listeners
+    startButton.addEventListener('click', startNextJsServer);
+    openButton.addEventListener('click', openInBrowser);
+    checkButton.addEventListener('click', checkServerStatus);
+    
+    // IPC responses
+    ipcRenderer.on('server-status', (event, data) => {
+      setLoading(false);
+      isServerRunning = data.isRunning;
+      
+      if (data.isRunning) {
+        updateStatus('Next.js server is running and responding!', 'success');
+      } else {
+        updateStatus(data.message || 'Server is not running', data.error ? 'error' : 'normal');
+      }
+      
+      updateButtons();
+    });
+    
+    ipcRenderer.on('server-starting', (event, data) => {
+      updateStatus(data.message || 'Starting server...', 'waiting');
+    });
+    
+    ipcRenderer.on('server-error', (event, data) => {
+      setLoading(false);
+      updateStatus(data.message || 'Error starting server', 'error');
+      updateButtons();
+    });
+    
+    ipcRenderer.on('browser-opened', () => {
+      updateStatus('Application opened in browser', 'success');
+    });
+  </script>
+</body>
+</html>
+  
