@@ -1,0 +1,4 @@
+*.asar filter=lfs diff=lfs merge=lfs -text
+*.node filter=lfs diff=lfs merge=lfs -text
+*.dmg filter=lfs diff=lfs merge=lfs -text
+Electron[[:space:]]Framework filter=lfs diff=lfs merge=lfs -text
